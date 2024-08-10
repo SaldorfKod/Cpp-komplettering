@@ -125,6 +125,36 @@ void showInventory() {
         }
 };
 
+//Function to handle input and verify it is compatible with desired data type
+double inputVerification(double rawInput){
+    bool choiceIsValid = 0;
+    double verifiedInput = 0;
+    double newRawInput = 0;
+    // Go into loop and check if cin stream is good (int) or bad (not an int)
+    while (choiceIsValid != 1){
+        if (!std::cin){
+            // If not good: output error message...
+            std::cout << "This wasn't a number. Try again." << std::endl;
+            //...Then clear the bad state of stream...
+            std::cin.clear();
+            // I'll be honest i don't fully understand this part..
+            // Ignore 1000 characters or up to and including "\n" i think?
+            // Ideally this should be cin.ignore([all of it]);
+            std::cin.ignore(1000, '\n');
+            // Same as before, input stream to my int
+            std::cin >> newRawInput;
+        }
+        // Check if the stream now is good
+        if (std::cin)
+        {
+            // If good: set my flag (bool) to true and we will exit the loop
+            choiceIsValid = 1;
+            verifiedInput = newRawInput;
+        }
+    }
+    return verifiedInput;
+};
+
 
 int main() {
     bool menuRunning = 1;
@@ -141,7 +171,7 @@ int main() {
     //this creates the file we will use for our inventory. 
     //The second flag makes sure we overwrite any existing file with the same name.
     std::fstream myfs{"inventory.txt", std::ios::out};
-    //Write a string to the file, for easier debugging.
+    //Write a string to the file, for easier debugging and readability.
     myfs << "Items in inventory:\n";
 
     while (menuRunning == 1)
@@ -196,7 +226,11 @@ int main() {
             std::cout << "Name: ";
             std::cin >> newName;
             std::cout << "Price: ";
+            //Here i tried using the function
             std::cin >> newPrice;
+            if (!std::cin){
+                newPrice = inputVerification(newPrice);
+            }
             std::cout << "Quantity: ";
             std::cin >> newQuantity;
             std::cout << "Warranty in number of days: ";

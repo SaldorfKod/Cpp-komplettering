@@ -1,0 +1,10 @@
+
+Product: correct
+Price: 25
+Quantity: 5
+Warranty days: 90
+
+Product: wrong
+Price: 85
+Quantity: 15
+Warranty days: 90
