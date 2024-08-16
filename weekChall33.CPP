@@ -4,18 +4,21 @@
 #include <vector>
 #include <fstream>
 
+//The base class other classes are derived from
 class Product
 {
-protected:
+    protected:
+    //All classes have these data points and further ones specific to them
     std::string name;
     double price;
     double quantity;
 
-public:
+    //Constructor
+    public:
     Product(const std::string &_name, double _price, double _quantity) : name(_name), price(_price), quantity(_quantity) {}
 
     
-
+    //Class specific function to write data to file
     virtual void writeToFile()
     {
         // Call calculate function from inside this function, easy wam bam
@@ -33,18 +36,21 @@ public:
            << totalCost
            << "\n";
     }
-
+    //Function to calculate total cost is inside class so it has access to all data
     virtual double calculateTotalCost()
     {
         return price * quantity;
     }
 
+    //Decontructor does nothing special
     virtual ~Product() {}
 };
 
+//Class derived from Product
 class Electronics : public Product
 {
 private:
+    //Data specific to Electronics: How many days of warranty the product has
     double warrantyDays;
 
 public:
@@ -73,9 +79,12 @@ public:
     }
 };
 
+//Another class derived from Product
 class Clothing : public Product
 {
 private:
+    //The data specific to this class is size. 
+    //As size can be either numbers or letters (XL) we use a string
     std::string size;
 
 public:
@@ -103,10 +112,12 @@ public:
     }
 };
 
+//The last class derived from Product
 class Food : public Product
 {
 private:
-    // string?
+    //I chose string here as that will allow things like "30september" 
+    //We won't be searching or sorting so it should be fine
     std::string expiration;
 
 public:
@@ -134,6 +145,7 @@ public:
     }
 };
 
+//Function to read "inventory" from file
 void showInventory()
 {
     // Set up inbound filestream to the file created in main
@@ -142,7 +154,9 @@ void showInventory()
     std::string shower;
     while (fs)
     {
-        std::getline(fs, shower); // read each line into a string
+        //Read each line into a string
+        std::getline(fs, shower); 
+        //Output that string
         std::cout << shower << std::endl;
     }
 };
@@ -153,7 +167,7 @@ double inputVerification()
     bool choiceIsValid = 0;
     double verifiedInput = 0;
     double newRawInput = 0;
-    // Go into loop and check if cin stream is good (int) or bad (not an int)
+    // Go into loop and check if cin stream is good (the desired data type) or bad
     while (choiceIsValid != 1)
     {
         //We can access the iostream from main here
@@ -164,7 +178,7 @@ double inputVerification()
             //...Then clear the bad state of stream...
             std::cin.clear();
             // I can't seem to ignore[all] so i just ignore 1000 chars or untill \n
-            // This is not perfect
+            // This is not perfect. I will research this further.
             std::cin.ignore(1000, '\n');
             // Ask for new input in the function. Thus we don't need any args calling the function
             std::cin >> newRawInput;
@@ -177,13 +191,13 @@ double inputVerification()
             verifiedInput = newRawInput;
         }
     }
+    //In the end we return the verified number as a double
     return verifiedInput;
 };
 
 int main()
 {
     bool menuRunning = 1;
-    bool choiceIsValid = 0;
     int choiceInteger = 0;
     double newQuantity = 0;
     double newWarranty = 0;
@@ -211,9 +225,9 @@ int main()
                   << std::endl;
         std::cout << "Enter your choice: " << std::endl;
         std::cin >> choiceInteger;
-        //First om many function calls
-        //This is the best way I found: Only use function if the...
-        //... Stream is found to be bad
+        /*This is how every call to this function will be handled; 
+        We only call the function if the stream is bad
+        If stream is good the input is stored correctly without the need for the function*/
         if (!std::cin)
         {
             choiceInteger = inputVerification();
@@ -222,11 +236,12 @@ int main()
         //Electronis
         if (choiceInteger == 1)
         {
+            //First we take in all the info from user
             std::cout << "Enter the details of the electronics product to add:\n";
             std::cout << "Name: ";
             std::cin >> newName;
             std::cout << "Price: ";
-            // Here i tried using the function
+            //When we specifically want numbers we use the same verification method as above
             std::cin >> newPrice;
             if (!std::cin)
             {
@@ -246,14 +261,13 @@ int main()
             }
             // create object of class Electronics, object is called e1
             Electronics e1(newName, newPrice, newQuantity, newWarranty);
-            // Call function to write all info to file
             std::cout << "Object created" << std::endl;
+            // Call function to write all info to file
+            // This function will call the function to calclate sum total before writing to file
             e1.writeToFile();
             //These messages are partly for debugging, but it looks good so I leave them
             std::cout << "Returning to menu" << std::endl;
-            // Call function to calculate total cost and write this to file
-            // Delete the object. It will only persist in the file.
-            // It should be deleted when it goes out of scope i.e. here.
+            // The object should deleted when it goes out of scope i.e. here.
             //Reset menu choice
             choiceInteger = 0;
         }
@@ -275,7 +289,7 @@ int main()
             {
                 newQuantity = inputVerification();
             }
-            std::cout << "Size (s, m, l, xl, or xxl): ";
+            std::cout << "Size (Letters and numbers are OK): ";
             std::cin >> newSize;
             // create object of class clothing, object is called c1
             Clothing c1(newName, newPrice, newQuantity, newSize);
@@ -325,6 +339,7 @@ int main()
             // Reset menu choice to 0
             choiceInteger = 0;
         }
+        //Exit the program
         if (choiceInteger == 5)
         {
             std::cout << "Good bye!" << std::endl;
@@ -332,13 +347,6 @@ int main()
             // Reset menu choice to 0
             choiceInteger = 0;
         }
-        /*if(choiceIsValid == 0){
-            std::cout << "Invalid choice. Please try again.\n";
-            // Reset menu choice to 0
-            choiceInteger = 0;
-        }
-        */
-        choiceIsValid = 0;
     }
     return 0;
 }

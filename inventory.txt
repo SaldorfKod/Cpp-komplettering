@@ -1,6 +1,17 @@
-
-Product: test
-Price: 25
-Quantity: 4
+Items in inventory:
+rice: 25
+Quantity: 50
 Warranty days: 90
-Total cost: 100
+Total cost: 1250
+
+Product: sirrt
+Price: 45
+Quantity: 10
+Size: 52
+Total cost: 450
+
+Product: apples
+Price: 5
+Quantity: 200
+Expiration date: 240930
+Total cost: 1000
