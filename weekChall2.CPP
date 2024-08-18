@@ -67,27 +67,7 @@ double calculateTotalCost(const std::vector<T>& items, int quantity) {
         totalCost += item->calculateTotalCost(quantity);
     }
     return totalCost;
-}
-
-//Funktion för att kolla så user input är int. 
-template <typename S>
-bool intChecker(const S& value) {
-    //If this bool is true, the input checked is an integer
-    bool intyness = 0;
-    int j = 0;
-    for (j = 0; j < value.length(); j++)
-    {
-        if (isdigit(value[i]) == false)
-        {
-            intyness = 0;
-            break;
-        }
-        else
-            intyness = 1;
-    }
-    return intyness;
-}
-
+};
 
 int main()
 {
@@ -128,7 +108,8 @@ int main()
                 std::cin >> itemName;
                 std::cout << "Price per Kg: ";
                 std::cin >> itemPrice;
-                /*if (!cin) // or*/ if(std::cin.fail())
+                /*if (!cin) // or*/ 
+                if(std::cin.fail())
                 {
                     // user didn't input a number
                     std::cin.clear();                                                   // reset failbit
